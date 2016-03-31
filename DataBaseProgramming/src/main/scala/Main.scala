@@ -1,4 +1,5 @@
 import slick.driver.SQLiteDriver.api._
+import slick.jdbc.GetResult
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -16,10 +17,12 @@ object Main {
     try {
       Await.result(
         db.run(
-          sql"""SELECT * FROM artist WHERE name = ${name} LIMIT 1""".as[(Int, String, String)]
+          sql"""SELECT * FROM artist WHERE name = ${name} LIMIT 1""".as[Artist]
         ).map(println),
         Duration.Inf
       )
     } finally db.close
   }
+
+  implicit val userGetResult = GetResult(r => Artist(r.<<, r.<<, r.<<))
 }
